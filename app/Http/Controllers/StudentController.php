@@ -59,14 +59,18 @@ class StudentController extends Controller
             $min = $subCriteria->where('id', $sc->id)->min('nilai');
 
             foreach($student as $s) {
-                $normalized[$s->id][$sc->id] = ($sc->nilai - $min) / ($max - $min);
+                if($max == $min) {
+                    $normalized[$s->id][$sc->id] = 1;
+                } else {
+                    $normalized[$s->id][$sc->id] = ($sc->nilai - $min) / ($max - $min);
+                }
             }
         }
 
         $results = [];
         foreach($student as $s) {
             $Qi = 0;
-            $Pi = 0;
+            $Pi = 1;
 
             foreach($subCriteria as $sc) {
                 $Qi += $sc->bobot * $normalized[$s->id][$sc->id];
